@@ -1,0 +1,19 @@
+{
+    "data_cleaning_rules": {
+      "missing_values": {
+        "strategy": "mean", 
+        "columns": ["age", "salary"]
+      },
+      "duplicates": {
+        "strategy": "remove",
+        "subset": ["id", "email"]
+      },
+      "standardization": {
+        "date_format": "yyyy-mm-dd",
+        "columns": {
+          "date_of_birth": "date_format",
+          "join_date": "date_format"
+        }
+      }
+    }
+  }

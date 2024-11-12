@@ -1,0 +1,41 @@
+{
+    "data_transformation_rules": {
+      "filtering": {
+        "conditions": [
+          {
+            "column": "status",
+            "operator": "equals",
+            "value": "active"
+          },
+          {
+            "column": "age",
+            "operator": "greater_than",
+            "value": 18
+          }
+        ]
+      },
+      "aggregating": {
+        "operations": [
+          {
+            "column": "salary",
+            "operation": "sum",
+            "group_by": "department"
+          },
+          {
+            "column": "age",
+            "operation": "average",
+            "group_by": "department"
+          }
+        ]
+      },
+      "merging": {
+        "datasets": [
+          {
+            "source": "employee_data",
+            "target": "department_data",
+            "on": ["department_id"]
+          }
+        ]
+      }
+    }
+  }
