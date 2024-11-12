@@ -1,6 +1,9 @@
 import json
 import requests
 
+
+CONFIG_PATH= 'C:\\Users\\gaura\\OneDrive\\Documents\\DataFlowPro\\configs\\sourceConfig.json'
+
 def load_config(file_path):
     with open(file_path, 'r') as file:
         config = json.load(file)
@@ -18,7 +21,7 @@ def get_api_data(config, endpoint):
         response.raise_for_status()
 
 def main():
-    config = load_config('C:\\Users\\218433\\Documents\\DataFlowPro\\config\\sourceConfig.json')
+    config = load_config(CONFIG_PATH)
     
     # Example: Fetch data from the 'posts' endpoint
     data = get_api_data(config, 'posts')
@@ -26,3 +29,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+    
