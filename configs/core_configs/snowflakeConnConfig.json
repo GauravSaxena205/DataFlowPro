@@ -1,0 +1,9 @@
+{
+    "account_identifier": "ozzmpih-ho97537",
+    "username": "gauravsaxena205",
+    "password": "Harmony103#",
+    "region": "AZURE_WESTUS2",
+    "warehouse": "COMPUTE_WH",
+    "database": "BRONZE",
+    "schema":"LZ"
+  }

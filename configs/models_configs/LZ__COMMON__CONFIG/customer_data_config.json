@@ -1,0 +1,55 @@
+{
+    "model_name": "customer_data",
+    "source_table": "RAW_CUSTOMER_LANDING",
+    "cleanup_steps": [
+      {
+        "type": "null_handling",
+        "columns": [
+          {
+            "column_name": "email",
+            "strategy": "drop_row"
+          },
+          {
+            "column_name": "age",
+            "strategy": "replace_null",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "type": "data_validation",
+        "checks": [
+          {
+            "column_name": "age",
+            "validation_type": "range",
+            "min_value": 18,
+            "max_value": 120
+          },
+          {
+            "column_name": "email",
+            "validation_type": "regex",
+            "regex_pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+          }
+        ]
+      },
+      {
+        "type": "data_transformation",
+        "transformations": [
+          {
+            "column_name": "email",
+            "operation": "lowercase"
+          }
+        ]
+      },
+      {
+        "type": "deduplication",
+        "strategy": "keep_first",
+        "unique_columns": ["email"]
+      }
+    ],
+    "metadata": {
+      "version": "1.0",
+      "last_updated": "2024-12-15",
+      "created_by": "data_team"
+    }
+  }

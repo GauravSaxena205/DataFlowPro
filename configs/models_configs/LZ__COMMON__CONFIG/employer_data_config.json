@@ -1,0 +1,82 @@
+{
+    "model_name": "employer_data",
+    "source_table": "RAW_EMPLOYER_LANDING",
+    "cleanup_steps": [
+      {
+        "type": "null_handling",
+        "columns": [
+          {
+            "column_name": "company_name",
+            "strategy": "drop_row"
+          },
+          {
+            "column_name": "employee_count",
+            "strategy": "replace_null",
+            "value": 0
+          },
+          {
+            "column_name": "industry",
+            "strategy": "replace_null",
+            "value": "Unknown"
+          }
+        ]
+      },
+      {
+        "type": "data_validation",
+        "checks": [
+          {
+            "column_name": "employee_count",
+            "validation_type": "range",
+            "min_value": 0,
+            "max_value": 1000000
+          },
+          {
+            "column_name": "company_website",
+            "validation_type": "regex",
+            "regex_pattern": "^(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})[/\\w \\.-]*/?$"
+          },
+          {
+            "column_name": "founding_year",
+            "validation_type": "range",
+            "min_value": 1600,
+            "max_value": 2024
+          }
+        ]
+      },
+      {
+        "type": "data_transformation",
+        "transformations": [
+          {
+            "column_name": "company_name",
+            "operation": "trim"
+          },
+          {
+            "column_name": "industry",
+            "operation": "uppercase"
+          },
+          {
+            "column_name": "founding_year",
+            "operation": "convert_type",
+            "target_type": "integer"
+          }
+        ]
+      },
+      {
+        "type": "deduplication",
+        "strategy": "keep_first",
+        "unique_columns": ["company_name", "tax_id"]
+      },
+      {
+        "type": "outlier_handling",
+        "method": "percentile",
+        "threshold": 99,
+        "columns": ["employee_count", "annual_revenue"]
+      }
+    ],
+    "metadata": {
+      "version": "1.0",
+      "last_updated": "2024-12-15",
+      "created_by": "data_team",
+      "description": "Cleanup configuration for employer demographic and basic information"
+    }
+  }

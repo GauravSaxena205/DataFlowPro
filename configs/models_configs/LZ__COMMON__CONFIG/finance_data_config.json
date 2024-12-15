@@ -1,0 +1,155 @@
+{
+    "model_name": "finance_data",
+    "source_table": "RAW_FINANCIAL_LANDING",
+    "cleanup_steps": [
+      {
+        "type": "null_handling",
+        "columns": [
+          {
+            "column_name": "transaction_id",
+            "strategy": "drop_row"
+          },
+          {
+            "column_name": "amount",
+            "strategy": "replace_null",
+            "value": 0
+          },
+          {
+            "column_name": "account_type",
+            "strategy": "replace_null",
+            "value": "Unknown"
+          },
+          {
+            "column_name": "category",
+            "strategy": "replace_null",
+            "value": "Miscellaneous"
+          }
+        ]
+      },
+      {
+        "type": "data_validation",
+        "checks": [
+          {
+            "column_name": "transaction_id",
+            "validation_type": "regex",
+            "regex_pattern": "^[A-Z]{2}\\d{8}$"
+          },
+          {
+            "column_name": "amount",
+            "validation_type": "range",
+            "min_value": -1000000,
+            "max_value": 1000000
+          },
+          {
+            "column_name": "transaction_date",
+            "validation_type": "range",
+            "min_value": "2000-01-01",
+            "max_value": "2024-12-31"
+          },
+          {
+            "column_name": "currency",
+            "validation_type": "regex",
+            "regex_pattern": "^[A-Z]{3}$"
+          }
+        ]
+      },
+      {
+        "type": "data_transformation",
+        "transformations": [
+          {
+            "column_name": "amount",
+            "operation": "round",
+            "precision": 2
+          },
+          {
+            "column_name": "transaction_date",
+            "operation": "convert_type",
+            "target_type": "date",
+            "format": "YYYY-MM-DD"
+          },
+          {
+            "column_name": "description",
+            "operation": "trim"
+          },
+          {
+            "column_name": "account_type",
+            "operation": "uppercase"
+          }
+        ]
+      },
+      {
+        "type": "deduplication",
+        "strategy": "keep_first",
+        "unique_columns": ["transaction_id", "transaction_date", "amount"]
+      },
+      {
+        "type": "outlier_handling",
+        "method": "percentile",
+        "threshold": 99,
+        "columns": ["amount"]
+      },
+      {
+        "type": "categorical_mapping",
+        "mappings": [
+          {
+            "column_name": "account_type",
+            "map": {
+              "CHK": "Checking",
+              "SAV": "Savings",
+              "CRD": "Credit",
+              "INV": "Investment",
+              "LN": "Loan"
+            }
+          },
+          {
+            "column_name": "category",
+            "map": {
+              "UTIL": "Utilities",
+              "GROC": "Groceries",
+              "TRANS": "Transportation",
+              "ENT": "Entertainment",
+              "HLTH": "Healthcare",
+              "SAL": "Salary",
+              "RNT": "Rent"
+            }
+          }
+        ]
+      },
+      {
+        "type": "aggregation_checks",
+        "checks": [
+          {
+            "group_columns": ["account_type", "category"],
+            "aggregations": [
+              {
+                "column": "amount",
+                "method": "sum",
+                "threshold_check": {
+                  "min": -1000000,
+                  "max": 1000000
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "custom_rules": [
+      {
+        "name": "negative_amount_validation",
+        "description": "Ensure negative amounts are only for specific transaction types",
+        "rule": "IF amount < 0 THEN category IN ('Refund', 'Return', 'Adjustment')"
+      },
+      {
+        "name": "large_transaction_flag",
+        "description": "Flag transactions above certain threshold",
+        "rule": "IF ABS(amount) > 50000 THEN flag_for_review = TRUE"
+      }
+    ],
+    "metadata": {
+      "version": "1.0",
+      "last_updated": "2024-12-15",
+      "created_by": "finance_data_team",
+      "description": "Comprehensive cleanup configuration for financial transactions"
+    }
+  }

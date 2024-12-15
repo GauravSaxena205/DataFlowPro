@@ -1,0 +1,78 @@
+{
+    "API": {
+      "JSONPLACEHOLDER": {
+        "api_base_url": "https://jsonplaceholder.typicode.com",
+        "endpoints": {
+          "posts": "/posts",
+          "comments": "/comments",
+          "albums": "/albums",
+          "photos": "/photos",
+          "todos": "/todos",
+          "users": "/users"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "timeout": 30,
+        "snowflake_db": "BRONZE",
+        "snowflake_schema": "LZ",
+        "snowflake_table": "JSONPLACEHOLDER_RZ"
+      },
+      "API_NAME": {
+        "api_base_url": "",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "timeout": 30,
+        "snowflake_db": "BRONZE",
+        "snowflake_schema": "LZ",
+        "snowflake_table": ""
+      }
+    },
+    "CSV": {
+      "DAILY_SRC": {
+        "file_location": "",
+        "snowflake_db": "BRONZE",
+        "snowflake_schema": "LZ",
+        "snowflake_table": ""
+      },
+      "WEEKLY_SRC": {
+        "file_location": "",
+        "snowflake_db": "",
+        "snowflake_schema": "",
+        "snowflake_table": ""
+      },
+      "MONTHLY_SRC": {
+        "file_location": "",
+        "snowflake_db": "",
+        "snowflake_schema": "",
+        "snowflake_table": ""
+      }
+    },
+    "AZURE_BLOB_STORAGE": {
+      "CONTAINER_1": {
+        "accountName": "your_account_name",
+        "accountKey": "your_account_key",
+        "containerName": "your_container_name",
+        "blobName": "your_blob_name",
+        "connectionString": "your_connection_string",
+        "snowflake_db": "",
+        "snowflake_schema": "",
+        "snowflake_table": ""
+      }
+    },
+    "SHAREPOINT": {
+      "SHAREPOINT_SITE_1": {
+        "Config": {
+          "site_name": "",
+          "site_id": "",
+          "folder_name": "",
+          "folder_id": "",
+          "file_name": "",
+          "snowflake_db": "",
+          "snowflake_schema": "",
+          "snowflake_table": ""
+        }
+      }
+    }
+  }
